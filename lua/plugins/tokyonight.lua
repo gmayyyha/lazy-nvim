@@ -8,7 +8,7 @@ return {
                 hl.CursorLineNr = { fg = "#ff9e64" }
                 hl.LineNr = { fg = "#7aa2f7" }
                 hl.LineNrAbove = { fg = "#7aa2f7" }
-                hl.LineNrBelow = { fg = "#9d7cd8" }
+                hl.LineNrBelow = { fg = "#77840b" }
                 hl.Visual = { bg = "#296015" }
             end,
         })
