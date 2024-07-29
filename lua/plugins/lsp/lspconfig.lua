@@ -4,7 +4,7 @@ return {
     dependencies = {
         "hrsh7th/cmp-nvim-lsp",
         { "antosha417/nvim-lsp-file-operations", config = true },
-        { "folke/neodev.nvim",                   opts = {} },
+        { "folke/neodev.nvim", opts = {} },
     },
     config = function()
         local lspconfig = require("lspconfig")
@@ -62,7 +62,7 @@ return {
         })
 
         -- use to enable autocompletion (assign to every lsp server config)
-        local capabilities = require('cmp_nvim_lsp').default_capabilities()
+        local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
         local util = require("lspconfig.util")
 
@@ -73,6 +73,12 @@ return {
             vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
         end
 
+        -- used to ensure hover displays with borders
+        local handlers = {
+            ["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = "rounded" }),
+            ["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, { border = "rounded" }),
+        }
+
         mason_lspconfig.setup_handlers({
             function(server)
                 lspconfig[server].setup({
@@ -80,62 +86,103 @@ return {
                 })
             end,
             ["clangd"] = function()
+                local root_files = {
+                    ".clangd",
+                    ".clang-tidy",
+                    ".clang-format",
+                    ".git",
+                    "compile_commands.json",
+                    "CMakeLists.txt",
+                    "compile_flags.txt",
+                    "Makefile",
+                    "configure.ac", -- AutoTools
+                }
+
                 lspconfig["clangd"].setup({
                     capabilities = capabilities,
+                    handlers = handlers,
+                    on_attach = function(client, _)
+                        -- Disable LSP formatting
+                        client.server_capabilities.documentFormattingProvider = false
+                        --                        client.server_capabilities.signatureHelpProvider = false
+                        --                        client.server_capabilities.semanticTokensProvider = nil
+                    end,
+                    filetypes = { "h", "hpp", "c", "cc", "cpp", "objc", "objcpp", "cuda", "proto" },
+                    root_dir = function(fname)
+                        return util.root_pattern(unpack(root_files))(fname) or util.find_git_ancestor(fname)
+                    end,
+                    single_file_support = true,
                     cmd = {
                         "/usr/bin/clangd",
+                        --                        "--log=verbose",
+                        "--query-driver=/usr/bin/clang",
                         "--background-index=false",
                         "--clang-tidy",
                         "--header-insertion=iwyu",
                     },
                 })
             end,
-            ["lua_ls"] = function()
-                lspconfig["lua_ls"].setup({
-                    capabilities = capabilities,
-                    settings = {
-                        Lua = {
-                            completion = {
-                                callSnippet = "Replace",
-                            },
-                            diagnostics = {
-                                globals = { "vim" },
-                            },
-                        },
-                    },
-                })
-            end,
-            ["pyright"] = function()
-                local path = util.path
-                lspconfig["pyright"].setup({
-                    capabilities = capabilities,
-                    on_attach = function(client, _)
-                        -- Disable LSP formatting
-                        client.server_capabilities.documentFormattingProvider = false
-                    end,
-                    before_init = function(_, config)
-                        local default_venv_path = path.join(vim.env.HOME, ".venv", "bin", "python")
-                        config.settings.python.pythonPath = default_venv_path
-                    end,
-                })
-            end,
-            ["gopls"] = function()
-                lspconfig["gopls"].setup({
-                    capabilities = capabilities,
-                    cmd = { "gopls" },
-                    filetypes = { "go", "gomod", "gowork", "gotmpl" },
-                    root_dir = util.root_pattern("go.work", "go.mod"),
-                    settings = {
-                        gopls = {
-                            completeUnimported = true,
-                            usePlaceholders = true,
-                            analyses = {
-                                unusedparams = true,
-                            },
-                        },
-                    },
-                })
-            end
+
+            -- ["pyright"] = function()
+            --     local path = util.path
+            --     lspconfig["pyright"].setup({
+            --         capabilities = capabilities,
+            --         on_attach = function(client, _)
+            --             -- Disable LSP formatting
+            --             client.server_capabilities.documentFormattingProvider = false
+            --             --                        client.server_capabilities.signatureHelpProvider = false
+            --             --                        client.server_capabilities.semanticTokensProvider = nil
+            --         end,
+            --         cmd = { "pyright-langserver", "--stdio" },
+            --         filetypes = { "python" },
+            --         root_dir = util.root_pattern(
+            --             "pyproject.toml",
+            --             "setup.py",
+            --             "setup.cfg",
+            --             "requirements.txt",
+            --             "Pipfile",
+            --             "pyrightconfig.json"
+            --         ),
+            --         before_init = function(_, config)
+            --             default_env_path = path.join(vim.env.HOME, ".venv", "bin", "python")
+            --             config.settings.python.PythonPath = default_env_path
+            --         end,
+            --     })
+            -- end,
+            -- ["lua_ls"] = function()
+            --     lspconfig["lua_ls"].setup({
+            --         handlers = handlers,
+            --         capabilities = capabilities,
+            --         settings = {
+            --             Lua = {
+            --                 completion = {
+            --                     callSnippet = "Replace",
+            --                 },
+            --                 diagnostics = {
+            --                     globals = { "vim" },
+            --                 },
+            --             },
+            --         },
+            --     })
+            -- end,
+            -- ["gopls"] = function()
+            --     lspconfig["gopls"].setup({
+            --         handlers = handlers,
+            --         capabilities = capabilities,
+            --         cmd = { "gopls" },
+            --         filetypes = { "go", "gomod", "gowork", "gotmpl" },
+            --         root_dir = util.root_pattern("go.work", "go.mod"),
+            --         settings = {
+            --             gopls = {
+            --                 completeUnimported = true,
+            --                 usePlaceholders = true,
+            --                 analyses = {
+            --                     unusedparams = true,
+            --                 },
+            --             },
+            --         },
+            --     })
+            -- end,
         })
     end,
 }

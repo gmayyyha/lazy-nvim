@@ -53,6 +53,5 @@ return {
                 },
             },
         })
-    end
-
+    end,
 }

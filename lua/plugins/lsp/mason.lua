@@ -24,11 +24,11 @@ return {
         mason_lspconfig.setup({
             ensure_installed = {
                 "clangd",
-                "pylsp",
+                --                "pylsp",
                 "lua_ls",
                 "rust_analyzer",
                 "gopls",
-                "jedi_language_server",
+                --                "jedi_language_server",
                 "pyright",
                 "bashls",
                 "jsonls",
