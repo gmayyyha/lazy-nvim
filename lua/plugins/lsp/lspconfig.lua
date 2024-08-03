@@ -123,32 +123,33 @@ return {
                 })
             end,
 
-            -- ["pyright"] = function()
-            --     local path = util.path
-            --     lspconfig["pyright"].setup({
-            --         capabilities = capabilities,
-            --         on_attach = function(client, _)
-            --             -- Disable LSP formatting
-            --             client.server_capabilities.documentFormattingProvider = false
-            --             --                        client.server_capabilities.signatureHelpProvider = false
-            --             --                        client.server_capabilities.semanticTokensProvider = nil
-            --         end,
-            --         cmd = { "pyright-langserver", "--stdio" },
-            --         filetypes = { "python" },
-            --         root_dir = util.root_pattern(
-            --             "pyproject.toml",
-            --             "setup.py",
-            --             "setup.cfg",
-            --             "requirements.txt",
-            --             "Pipfile",
-            --             "pyrightconfig.json"
-            --         ),
-            --         before_init = function(_, config)
-            --             default_env_path = path.join(vim.env.HOME, ".venv", "bin", "python")
-            --             config.settings.python.PythonPath = default_env_path
-            --         end,
-            --     })
-            -- end,
+            ["pyright"] = function()
+                local path = util.path
+                lspconfig["pyright"].setup({
+                    capabilities = capabilities,
+                    on_attach = function(client, _)
+                        -- Disable LSP formatting
+                        client.server_capabilities.documentFormattingProvider = false
+                        --                        client.server_capabilities.signatureHelpProvider = false
+                        --                        client.server_capabilities.semanticTokensProvider = nil
+                    end,
+                    cmd = { "pyright-langserver", "--stdio" },
+                    filetypes = { "python" },
+                    root_dir = util.root_pattern(
+                        "pyproject.toml",
+                        "setup.py",
+                        "setup.cfg",
+                        "requirements.txt",
+                        "Pipfile",
+                        "pyrightconfig.json"
+                    ),
+                    on_init = function(client)
+                        default_env_path = path.join(vim.env.VIRTUAL_ENV)
+                        client.config.settings.python.PythonPath = path.join(default_env_path, "bin", "python")
+                        client.config.settings.python.venvPath = default_env_path
+                    end,
+                })
+            end,
             -- ["lua_ls"] = function()
             --     lspconfig["lua_ls"].setup({
             --         handlers = handlers,
