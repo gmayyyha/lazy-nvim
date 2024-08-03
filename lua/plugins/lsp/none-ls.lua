@@ -23,6 +23,42 @@ return {
             end
         end
 
+        local methods = require("null-ls.methods")
+        local h = require("null-ls.helpers")
+
+        local gcc = {
+            method = methods.internal.DIAGNOSTICS,
+            filetypes = { "c", "cpp" },
+            name = "gcc",
+            async = true,
+            generator = h.generator_factory({
+                command = "gcc",
+                args = {
+                    "-std=c89",
+                    "-Wall",
+                    "-Wpedantic",
+                    "$FILENAME",
+                    "-o /dev/null",
+                },
+                to_stdin = false,
+                from_stderr = true,
+                format = "line",
+                on_output = h.diagnostics.from_pattern(
+                    [[^([^:]+):(%d+):(%d+):%s+([^:]+):%s+(.*)$]],
+                    -- [[(%w+):(%d+):(%d+): (%w+): (.*)]],
+                    { "file", "row", "col", "severity", "message" },
+                    {
+                        severities = {
+                            ["fatal error"] = h.diagnostics.severities.error,
+                            ["error"] = h.diagnostics.severities.error,
+                            ["note"] = h.diagnostics.severities.information,
+                            ["warning"] = h.diagnostics.severities.warning,
+                        },
+                    }
+                ),
+            }),
+        }
+
         local nl = require("null-ls")
         local sources = {
             require("none-ls.formatting.jq"),
@@ -36,8 +72,13 @@ return {
 
             require("none-ls.diagnostics.flake8"),
 
+            nl.builtins.diagnostics.mypy,
+            nl.builtins.formatting.black,
+
             nl.builtins.formatting.stylua,
             nl.builtins.formatting.prettier,
+
+            gcc,
         }
         nl.setup({
             sources = sources,
