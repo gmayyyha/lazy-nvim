@@ -13,8 +13,8 @@ return {
                 rust = { "rustfmt" },
                 typescript = { "prettier" },
                 typescriptreact = { "prettier" },
-                c = { "clangformat" },
-                cpp = { "clangformat" },
+                --                c = { "clang-format" },
+                --               cpp = { "clang-format" },
             },
             format_on_save = {
                 lsp_fallback = true,
