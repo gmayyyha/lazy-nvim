@@ -1,5 +1,7 @@
 vim.cmd("let g:netrw_liststyle = 3")
 
+vim.g.bigfile_size = 1024 * 1024 * 1.5 -- 1.5 MB
+
 local opt = vim.opt
 
 opt.relativenumber = true
@@ -9,7 +11,7 @@ opt.title = true
 
 -- tabs & indentation
 opt.tabstop = 8 -- 8 spaces for tabs (prettier default)
-opt.expandtab = true -- expand tab to spaces
+--opt.expandtab = true -- expand tab to spaces
 opt.shiftwidth = 8 -- 8 spaces for indent width
 opt.autoindent = true -- copy indent from current line when starting new one
 opt.smartindent = true
