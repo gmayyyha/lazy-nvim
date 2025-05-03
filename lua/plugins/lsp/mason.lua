@@ -28,7 +28,7 @@ return {
 				"lua_ls",
 				"rust_analyzer",
 				"gopls",
-				"jedi_language_server",
+				--				"jedi_language_server",
 				"pyright",
 				"bashls",
 				"jsonls",
@@ -51,6 +51,7 @@ return {
 				"cpplint",
 				"clang-format",
 				"shellcheck",
+				"shfmt",
 			},
 		})
 	end,

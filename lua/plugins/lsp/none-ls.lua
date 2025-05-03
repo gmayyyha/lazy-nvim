@@ -67,8 +67,8 @@ return {
 			require("none-ls-shellcheck.diagnostics"),
 			require("none-ls-shellcheck.code_actions"),
 
-			require("none-ls.diagnostics.eslint_d"),
-			require("none-ls.code_actions.eslint_d"),
+			--			require("none-ls.diagnostics.eslint_d"),
+			--			require("none-ls.code_actions.eslint_d"),
 
 			require("none-ls.diagnostics.flake8"),
 
@@ -77,6 +77,9 @@ return {
 
 			nl.builtins.formatting.stylua,
 			nl.builtins.formatting.prettier,
+
+			--			nl.builtins.diagnostics.cppcheck,
+			--			nl.builtins.diagnostics.gccdiag,
 
 			gcc,
 		}

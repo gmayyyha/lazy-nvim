@@ -180,22 +180,22 @@ return {
 			--     })
 			-- end,
 			-- ["gopls"] = function()
-			--     lspconfig["gopls"].setup({
-			--         handlers = handlers,
-			--         capabilities = capabilities,
-			--         cmd = { "gopls" },
-			--         filetypes = { "go", "gomod", "gowork", "gotmpl" },
-			--         root_dir = util.root_pattern("go.work", "go.mod"),
-			--         settings = {
-			--             gopls = {
-			--                 completeUnimported = true,
-			--                 usePlaceholders = true,
-			--                 analyses = {
-			--                     unusedparams = true,
-			--                 },
-			--             },
-			--         },
-			--     })
+			-- 	lspconfig["gopls"].setup({
+			-- 		handlers = handlers,
+			-- 		capabilities = capabilities,
+			-- 		cmd = { "gopls" },
+			-- 		filetypes = { "go", "gomod", "gowork", "gotmpl" },
+			-- 		root_dir = util.root_pattern("go.work", "go.mod"),
+			-- 		settings = {
+			-- 			gopls = {
+			-- 				completeUnimported = true,
+			-- 				usePlaceholders = true,
+			-- 				analyses = {
+			-- 					unusedparams = true,
+			-- 				},
+			-- 			},
+			-- 		},
+			-- 	})
 			-- end,
 		})
 	end,

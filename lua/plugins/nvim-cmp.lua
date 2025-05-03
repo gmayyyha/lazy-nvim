@@ -12,23 +12,15 @@ return {
 		"saadparwaiz1/cmp_luasnip",
 		"rafamadriz/friendly-snippets",
 		"onsails/lspkind.nvim", -- vs-code like pictograms
-
-		-- codeium
-		{
-			"Exafunction/codeium.nvim",
-		},
 	},
 
 	config = function()
 		local cmp = require("cmp")
 		local lspkind = require("lspkind")
-		local codeium = require("codeium")
 
 		vim.api.nvim_set_hl(0, "CmpGhostText", { link = "Comment", default = true })
 		local defaults = require("cmp.config.default")()
 		local auto_select = true
-
-		codeium.setup()
 
 		-- import luasnip plugin safely
 		local _, luasnip = pcall(require, "luasnip")
@@ -56,7 +48,7 @@ return {
 				["<C-u>"] = cmp.mapping.scroll_docs(-4),
 				["<C-d>"] = cmp.mapping.scroll_docs(4),
 				["<C-Space>"] = cmp.mapping.complete(),
-				["<C-y>"] = cmp.mapping.confirm({ select = true }),
+				--				["<C-y>"] = cmp.mapping.confirm({ select = true }),
 				["<CR>"] = cmp.mapping.confirm({ select = auto_select }),
 				["<C-e>"] = cmp.mapping.abort(),
 
@@ -97,6 +89,7 @@ return {
 				format = lspkind.cmp_format({
 					maxwidth = 50,
 					ellipsis_char = "...",
+					--					preset = "codicons",
 				}),
 			},
 			sorting = defaults.sorting,
