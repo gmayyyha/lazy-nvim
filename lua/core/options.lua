@@ -1,6 +1,13 @@
 vim.cmd("let g:netrw_liststyle = 3")
 
+vim.g.mapleader = " "
+vim.g.maplocalleader = "\\"
+
 vim.g.bigfile_size = 1024 * 1024 * 1.5 -- 1.5 MB
+
+-- if the completion engine supports the AI source,
+-- use that instead of inline suggestions
+vim.g.ai_cmp = true
 
 local opt = vim.opt
 
@@ -41,7 +48,7 @@ opt.signcolumn = "yes" -- show sign column so that text doesn't shift
 opt.backspace = { "indent", "eol", "start" } -- allow backspace on indent, end of line or insert mode start position
 
 -- clipboard
-opt.clipboard:append("unnamedplus") -- use system clipboard as default register
+opt.clipboard = vim.env.SSH_TTY and "" or "unnamedplus" -- Sync with system clipboard
 
 -- split windows
 opt.splitright = true -- split vertical window to the right
