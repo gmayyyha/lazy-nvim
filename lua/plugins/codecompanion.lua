@@ -80,94 +80,6 @@ local supported_adapters = {
 	ollama = ollama_fn,
 }
 
-local function save_path()
-	local Path = require("plenary.path")
-	local p = Path:new(vim.fn.stdpath("data") .. "/codecompanion_chats")
-	p:mkdir({ parents = true })
-	return p
-end
-
---- Load a saved codecompanion.nvim chat file into a new CodeCompanion chat buffer.
---- Usage: CodeCompanionLoad
-vim.api.nvim_create_user_command("CodeCompanionLoad", function()
-	local fzf = require("fzf-lua")
-
-	local function select_adapter(filepath)
-		local adapters = vim.tbl_keys(supported_adapters)
-
-		fzf.fzf_exec(adapters, {
-			prompt = "Select CodeCompanion Adapter> ",
-			actions = {
-				["default"] = function(selected)
-					local adapter = selected[1]
-					-- Open new CodeCompanion chat with selected adapter
-					vim.cmd("CodeCompanionChat " .. adapter)
-
-					-- Read contents of saved chat file
-					local lines = vim.fn.readfile(filepath)
-
-					-- Get the current buffer (which should be the new CodeCompanion chat)
-					local current_buf = vim.api.nvim_get_current_buf()
-
-					-- Paste contents into the new chat buffer
-					vim.api.nvim_buf_set_lines(current_buf, 0, -1, false, lines)
-				end,
-			},
-		})
-	end
-
-	local function start_picker()
-		local files = vim.fn.glob(save_path() .. "/*", false, true)
-
-		fzf.fzf_exec(files, {
-			prompt = "Saved CodeCompanion Chats | <c-r>: remove >",
-			previewer = "builtin",
-			actions = {
-				["default"] = function(selected)
-					if #selected > 0 then
-						local filepath = selected[1]
-						select_adapter(filepath)
-					end
-				end,
-				["ctrl-r"] = function(selected)
-					if #selected > 0 then
-						local filepath = selected[1]
-						os.remove(filepath)
-						-- Refresh the picker
-						start_picker()
-					end
-				end,
-			},
-		})
-	end
-
-	start_picker()
-end, {})
-
---- Save the current codecompanion.nvim chat buffer to a file in the save_folder.
---- Usage: CodeCompanionSave <filename>.md
----@param opts table
-vim.api.nvim_create_user_command("CodeCompanionSave", function(opts)
-	local codecompanion = require("codecompanion")
-	local success, chat = pcall(function()
-		return codecompanion.buf_get_chat(0)
-	end)
-	if not success or chat == nil then
-		vim.notify(
-			"CodeCompanionSave should only be called from CodeCompanion chat buffers",
-			vim.log.levels.ERROR
-		)
-		return
-	end
-	if #opts.fargs == 0 then
-		vim.notify("CodeCompanionSave requires at least 1 arg to make a file name", vim.log.levels.ERROR)
-	end
-	local save_name = table.concat(opts.fargs, "-") .. ".md"
-	local save_file = save_path():joinpath(save_name)
-	local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
-	save_file:write(table.concat(lines, "\n"), "w")
-end, { nargs = "*" })
-
 return {
 	"olimorris/codecompanion.nvim",
 	opts = {},
@@ -179,6 +91,8 @@ return {
 			"MeanderingProgrammer/render-markdown.nvim",
 			ft = { "markdown", "codecompanion" },
 		},
+
+		"ravitemer/codecompanion-history.nvim",
 	},
 	config = function()
 		require("codecompanion").setup({
@@ -200,8 +114,11 @@ return {
 						},
 
 						["file"] = {
+							callback = "strategies.chat.slash_commands.file",
+							description = "Select a file using fzf_lua",
 							opts = {
 								provider = "fzf_lua", -- default|telescope|mini_pick|fzf_lua
+								contains_code = true,
 							},
 						},
 
@@ -231,6 +148,31 @@ return {
 				},
 				diff = {
 					provider = "default", -- default|mini_diff
+				},
+			},
+			extensions = {
+				history = {
+					enabled = true,
+					opts = {
+						-- Keymap to open history from chat buffer (default: gh)
+						keymap = "ah",
+						-- Automatically generate titles for new chats
+						auto_generate_title = true,
+						---On exiting and entering neovim, loads the last chat on opening chat
+						continue_last_chat = false,
+						---When chat is cleared with `gx` delete the chat from history
+						delete_on_clearing_chat = false,
+						-- Picker interface ("telescope" or "snacks" or "default")
+						picker = "snacks",
+						---Enable detailed logging for history extension
+						enable_logging = false,
+						---Directory path to save the chats
+						dir_to_save = vim.fn.stdpath("data") .. "/codecompanion-history",
+						-- Save all chats by default
+						auto_save = true,
+						-- Keymap to save the current chat manually
+						save_chat_keymap = "sc",
+					},
 				},
 			},
 			prompt_library = {
