@@ -1,4 +1,5 @@
 vim.cmd("let g:netrw_liststyle = 3")
+vim.cmd("filetype plugin indent on")
 
 vim.g.mapleader = " "
 vim.g.maplocalleader = "\\"
