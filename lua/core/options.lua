@@ -12,6 +12,8 @@ vim.g.ai_cmp = true
 
 local opt = vim.opt
 
+opt.mouse = "a"
+
 opt.relativenumber = true
 opt.number = true
 
