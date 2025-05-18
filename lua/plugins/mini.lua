@@ -17,6 +17,14 @@ return {
 		end,
 	},
 
+	{
+		"echasnovski/mini.pairs",
+		version = "*",
+		config = function()
+			require("mini.pairs").setup()
+		end,
+	},
+
 	-- {
 	-- 	"echasnovski/mini.indentscope",
 	-- 	version = "*",
