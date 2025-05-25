@@ -28,13 +28,7 @@ local gemini_fn = function()
 		},
 		schema = {
 			model = {
-				default = "gemini-2.5-flash-preview-04-17",
-			},
-			num_ctx = {
-				default = 16386,
-			},
-			num_predict = {
-				default = -1,
+				default = "gemini-2.5-flash-preview-05-20",
 			},
 		},
 	}
@@ -172,6 +166,11 @@ return {
 						auto_save = true,
 						-- Keymap to save the current chat manually
 						save_chat_keymap = "sc",
+					},
+				},
+				vectorcode = {
+					opts = {
+						add_tool = true,
 					},
 				},
 			},
