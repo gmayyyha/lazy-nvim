@@ -113,7 +113,7 @@ return {
 
 			vim.lsp.config("pyright", {
 				capabilities = capabilities,
-				on_attach = on_attach,
+				-- on_attach = on_attach,
 			})
 
 			vim.lsp.config("ruff", {
