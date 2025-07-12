@@ -28,10 +28,10 @@ map("n", "<leader>tf", "<cmd>tabnew %<CR>", { desc = "Open current buffer in new
 --map("n", "<C-j>", "<C-w>j", { desc = "Move to down split" })
 
 -- Resize window using <ctrl> arrow keys
-map("n", "<C-Up>", "<cmd>resize +2<cr>", { desc = "Increase Window Height" })
-map("n", "<C-Down>", "<cmd>resize -2<cr>", { desc = "Decrease Window Height" })
-map("n", "<C-Left>", "<cmd>vertical resize -2<cr>", { desc = "Decrease Window Width" })
-map("n", "<C-Right>", "<cmd>vertical resize +2<cr>", { desc = "Increase Window Width" })
+map("n", "<M-Up>", "<cmd>resize +2<cr>", { desc = "Increase Window Height" })
+map("n", "<M-Down>", "<cmd>resize -2<cr>", { desc = "Decrease Window Height" })
+map("n", "<M-Left>", "<cmd>vertical resize -2<cr>", { desc = "Decrease Window Width" })
+map("n", "<M-Right>", "<cmd>vertical resize +2<cr>", { desc = "Increase Window Width" })
 
 -- Move Lines
 map("n", "<A-j>", "<cmd>m .+1<cr>==", { desc = "Move Down" })

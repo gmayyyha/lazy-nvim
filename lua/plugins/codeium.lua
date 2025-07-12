@@ -2,9 +2,10 @@ return {
 	"Exafunction/windsurf.vim",
 	dependencies = {
 		"nvim-lua/plenary.nvim",
+		"saghen/blink.cmp",
 	},
 	config = function()
-		opts = {
+		require("codeium").setup({
 			enable_chat = true,
 			-- Change '<C-g>' here to any keycode you like.
 			vim.keymap.set("i", "<C-y>", function()
@@ -25,7 +26,7 @@ return {
 
 			enable_cmp_source = false,
 			virtual_text = {
-				enabled = true,
+				enabled = false,
 
 				-- These are the defaults
 
@@ -62,6 +63,6 @@ return {
 					prev = "<M-[>",
 				},
 			},
-		}
+		})
 	end,
 }

@@ -28,7 +28,16 @@ local gemini_fn = function()
 		},
 		schema = {
 			model = {
-				default = "gemini-2.5-flash-preview-05-20",
+				default = "gemini-2.5-flash",
+			},
+			max_tokens = {
+				default = 1048576,
+			},
+			reasoning_effort = {
+				default = "high",
+			},
+			temperature = {
+				default = 1,
 			},
 		},
 	}
@@ -103,7 +112,7 @@ return {
 					slash_commands = {
 						["buffer"] = {
 							opts = {
-								provider = "fzf_lua", -- default|telescope|mini_pick|fzf_lua
+								provider = "snacks", -- default|telescope|mini_pick|fzf_lua
 							},
 						},
 
@@ -111,20 +120,20 @@ return {
 							callback = "strategies.chat.slash_commands.file",
 							description = "Select a file using fzf_lua",
 							opts = {
-								provider = "fzf_lua", -- default|telescope|mini_pick|fzf_lua
+								provider = "snacks", -- default|telescope|mini_pick|fzf_lua
 								contains_code = true,
 							},
 						},
 
 						["help"] = {
 							opts = {
-								provider = "fzf_lua", -- telescope|mini_pick|fzf_lua
+								provider = "snacks", -- telescope|mini_pick|fzf_lua
 							},
 						},
 
 						["symbols"] = {
 							opts = {
-								provider = "fzf_lua", -- default|telescope|mini_pick|fzf_lua
+								provider = "snacks", -- default|telescope|mini_pick|fzf_lua
 							},
 						},
 					},
@@ -169,8 +178,32 @@ return {
 					},
 				},
 				vectorcode = {
+					---@type VectorCode.CodeCompanion.ExtensionOpts
 					opts = {
-						add_tool = true,
+						tool_group = {
+							-- this will register a tool group called `@vectorcode_toolbox` that contains all 3 tools
+							enabled = true,
+							-- a list of extra tools that you want to include in `@vectorcode_toolbox`.
+							-- if you use @vectorcode_vectorise, it'll be very handy to include
+							-- `file_search` here.
+							extras = {},
+							collapse = false, -- whether the individual tools should be shown in the chat
+						},
+						tool_opts = {
+							---@type VectorCode.CodeCompanion.LsToolOpts
+							ls = {},
+							---@type VectorCode.CodeCompanion.VectoriseToolOpts
+							vectorise = {},
+							---@type VectorCode.CodeCompanion.QueryToolOpts
+							query = {
+								max_num = { chunk = -1, document = -1 },
+								default_num = { chunk = 50, document = 10 },
+								include_stderr = false,
+								use_lsp = false,
+								no_duplicate = true,
+								chunk_mode = false,
+							},
+						},
 					},
 				},
 			},
@@ -186,7 +219,7 @@ return {
 						},
 						{
 							role = "user",
-							content = "Please make the following changes using #buffer with @editor\n\n",
+							content = "Please make the following changes using #buffer with @insert_edit_into_file\n\n",
 						},
 					},
 				},

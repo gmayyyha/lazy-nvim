@@ -2,7 +2,11 @@ return {
 	"saghen/blink.cmp",
 	event = { "BufReadPost", "BufNewFile" },
 	-- optional: provides snippets for the snippet source
-	dependencies = { "rafamadriz/friendly-snippets", { "xzbdmw/colorful-menu.nvim", opts = {} } },
+	dependencies = {
+		"rafamadriz/friendly-snippets",
+		{ "xzbdmw/colorful-menu.nvim", opts = {} },
+		"Exafunction/codeium.nvim",
+	},
 
 	-- use a release tag to download pre-built binaries
 	version = "1.*",
@@ -26,7 +30,7 @@ return {
 		-- C-k: Toggle signature help (if signature.enabled = true)
 		--
 		-- See :h blink-cmp-config-keymap for defining your own keymap
-		keymap = { ["<CR>"] = { "accept", "fallback" } },
+		--keymap = { ["<CR>"] = { "accept", "fallback" } },
 
 		appearance = {
 			-- 'mono' (default) for 'Nerd Font Mono' or 'normal' for 'Nerd Font'
@@ -66,13 +70,19 @@ return {
 		-- Default list of enabled providers defined so that you can extend it
 		-- elsewhere in your config, without redefining it, due to `opts_extend`
 		sources = {
-			default = { "lazydev", "lsp", "path", "snippets", "buffer" },
+			default = { "lazydev", "lsp", "path", "snippets", "buffer", "codeium" },
 			providers = {
 				lazydev = {
 					name = "LazyDev",
 					module = "lazydev.integrations.blink",
 					-- make lazydev completions top priority (see `:h blink.cmp`)
 					score_offset = 100,
+				},
+				codeium = {
+					name = "Codeium",
+					module = "codeium.blink",
+					-- make codeium completions top priority (see `:h blink.cmp`)
+					async = true,
 				},
 			},
 		},
