@@ -150,7 +150,7 @@ return {
 					provider = "default", -- default|telescope|mini_pick
 				},
 				diff = {
-					provider = "default", -- default|mini_diff
+					enabled = true,
 				},
 			},
 			extensions = {
