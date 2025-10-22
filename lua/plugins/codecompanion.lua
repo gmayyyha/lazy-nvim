@@ -67,11 +67,24 @@ local ollama_fn = function()
 end
 
 local supported_adapters = {
-	anthropic = anthropic_fn,
-	openai = openai_fn,
-	gemini = gemini_fn,
-	deepseek = deepseek_fn,
-	ollama = ollama_fn,
+	http = {
+		anthropic = anthropic_fn,
+		openai = openai_fn,
+		gemini = gemini_fn,
+		deepseek = deepseek_fn,
+		ollama = ollama_fn,
+	},
+	acp = {
+		gemini_cli = function()
+			return require("codecompanion.adapters").extend("gemini_cli", {
+				defaults = {
+					-- auth_method = "gemini-api-key", -- "oauth-personal" | "gemini-api-key" | "vertex-ai"
+					auth_method = "oauth-personal",
+					-- auth_method = "vertex-ai",
+				},
+			})
+		end,
+	},
 }
 
 return {
@@ -89,6 +102,14 @@ return {
 		"ravitemer/codecompanion-history.nvim",
 	},
 	config = function()
+		local function load_system_prompt(prompt_name)
+			-- https://codecompanion.olimorris.dev/configuration/system-prompt.html#configuring-the-system-prompt
+			local config_dir = vim.fn.stdpath("config")
+			local prompt_path = config_dir .. "/lua/plugins/custom/prompts/" .. prompt_name .. ".txt"
+			local lines = vim.fn.readfile(prompt_path)
+			return table.concat(lines, "\n")
+		end
+
 		require("codecompanion").setup({
 			opts = {
 				-- Set debug logging
@@ -217,62 +238,18 @@ return {
 				["Code review"] = {
 					strategy = "chat",
 					description = "Code review",
+					opts = {
+						index = 4,
+						ignore_system_prompt = true,
+					},
 					prompts = {
 						{
 							role = "system",
-							content = [[Analyze the code for:
-
-### CODE QUALITY
-* Function and variable naming (clarity and consistency)
-* Code organization and structure
-* Documentation and comments
-* Consistent formatting and style
-
-### RELIABILITY
-* Error handling and edge cases
-* Resource management
-* Input validation
-
-### MAINTAINABILITY
-* Code duplication (but don't overdo it with DRY, some duplication is fine)
-* Single responsibility principle
-* Modularity and dependencies
-* API design and interfaces
-* Configuration management
-
-### PERFORMANCE
-* Algorithmic efficiency
-* Resource usage
-* Caching opportunities
-* Memory management
-
-### SECURITY
-* Input sanitization
-* Authentication/authorization
-* Data validation
-* Known vulnerability patterns
-
-### TESTING
-* Unit test coverage
-* Integration test needs
-* Edge case testing
-* Error scenario coverage
-
-### POSITIVE HIGHLIGHTS
-* Note any well-implemented patterns
-* Highlight good practices found
-* Commend effective solutions
-
-Format findings as markdown and with:
-- Issue: [description]
-- Impact: [specific impact]
-- Suggestion: [concrete improvement with code example/suggestion]
-
-              ]],
+							content = load_system_prompt("code_review"),
 						},
 						{
 							role = "user",
-							content = "Please review provided code.\n" .. "#buffer #lsp",
+							content = "Please review provided code. " .. "#{buffer} #{lsp}",
 						},
 					},
 				},
@@ -287,18 +264,19 @@ Format findings as markdown and with:
 			{ "<leader>al", ":CodeCompanionChat ollama<CR>", desc = "Codecompanion: Ollama" },
 
 			{ "<leader>at", ":CodeCompanionChat Toggle<CR>", desc = "Codecompanion toggle" },
-			{
-				"<leader>aS",
-				function()
-					local name = vim.fn.input("Save as: ")
-					if name and name ~= "" then
-						vim.cmd("CodeCompanionSave " .. name)
-					end
-				end,
-				desc = "Codecompanion Save chat",
-			},
 			{ "<leader>aL", ":CodeCompanionLoad<CR>", desc = "Codecompanion Load chat" },
-			{ "<leader>aP", ":CodeCompanionActions<CR>", desc = "Codecompanion Prompts" },
+			{
+				"<C-a>",
+				"<cmd>CodeCompanionActions<CR>",
+				desc = "Open the action palette",
+				mode = { "n", "v" },
+			},
+			{
+				"<LocalLeader>a",
+				"<cmd>CodeCompanionChat Add<CR>",
+				desc = "Add code to a chat buffer",
+				mode = { "v" },
+			},
 		}
 	end,
 	init = function()
