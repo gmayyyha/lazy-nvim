@@ -119,9 +119,13 @@ return {
 			nl.builtins.formatting.stylua,
 			nl.builtins.formatting.prettier,
 
+			nl.builtins.formatting.gofumpt,
+			nl.builtins.formatting.goimports,
+
 			gcc_custom_diagnostics,
 		}
 		nl.setup({
+			debug = true,
 			sources = sources,
 		})
 

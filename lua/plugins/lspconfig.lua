@@ -121,6 +121,21 @@ return {
 				on_attach = on_attach,
 			})
 
+			vim.lsp.config("gopls", {
+				capabilities = capabilities,
+				on_attach = on_attach,
+				cmd = { "gopls" },
+				settings = {
+					gopls = {
+						completeUnimported = true,
+						usePlaceholders = true,
+						analyses = {
+							unusedparams = true,
+						},
+					},
+				},
+			})
+
 			vim.lsp.config("clangd", {
 				capabilities = capabilities,
 				on_attach = on_attach,

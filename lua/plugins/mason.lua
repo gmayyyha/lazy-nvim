@@ -22,6 +22,7 @@ return {
 		})
 		mason_lspconfig.setup({
 			ensure_installed = {
+				"gopls",
 				"lua_ls",
 				"pyright",
 				"ruff",

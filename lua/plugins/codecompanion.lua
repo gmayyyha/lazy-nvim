@@ -23,21 +23,12 @@ local gemini_fn = function()
 	local gemini_config = {
 		env = {
 			api_key = function()
-				return os.getenv("GEMINI_KEY")
+				return os.getenv("GEMINI_API_KEY")
 			end,
 		},
 		schema = {
 			model = {
-				default = "gemini-2.5-flash",
-			},
-			max_tokens = {
-				default = 1048576,
-			},
-			reasoning_effort = {
-				default = "high",
-			},
-			temperature = {
-				default = 1,
+				default = "gemini-2.5-pro",
 			},
 		},
 	}
