@@ -28,7 +28,7 @@ local gemini_fn = function()
 		},
 		schema = {
 			model = {
-				default = "gemini-2.5-pro",
+				default = "gemini-2.5-flash",
 			},
 		},
 	}
@@ -93,7 +93,7 @@ return {
 			opts = {
 				-- Set debug logging
 				show_defaults = true,
-				--                log_level = "DEBUG",
+				log_level = "DEBUG",
 			},
 			adapters = supported_adapters,
 			strategies = {
@@ -135,7 +135,7 @@ return {
 			},
 			display = {
 				chat = {
-					show_settings = true,
+					show_settings = false,
 				},
 				action_palette = {
 					provider = "default", -- default|telescope|mini_pick
@@ -278,35 +278,6 @@ Format findings as markdown and with:
 				},
 			},
 		})
-
-		local fidget = require("fidget")
-		local handler
-		if fidget then
-			vim.api.nvim_create_autocmd({ "User" }, {
-				pattern = "CodeCompanionRequest*",
-				group = vim.api.nvim_create_augroup("CodeCompanionHooks", {}),
-				callback = function(request)
-					if request.match == "CodeCompanionRequestStarted" then
-						if handler then
-							handler.message = "Abort."
-							handler:cancel()
-							handler = nil
-						end
-						handler = fidget.progress.handle.create({
-							title = "",
-							message = "Thinking...",
-							lsp_client = { name = "CodeCompanion" },
-						})
-					elseif request.match == "CodeCompanionRequestFinished" then
-						if handler then
-							handler.message = "Done."
-							handler:finish()
-							handler = nil
-						end
-					end
-				end,
-			})
-		end
 	end,
 	keys = function()
 		return {
@@ -329,5 +300,9 @@ Format findings as markdown and with:
 			{ "<leader>aL", ":CodeCompanionLoad<CR>", desc = "Codecompanion Load chat" },
 			{ "<leader>aP", ":CodeCompanionActions<CR>", desc = "Codecompanion Prompts" },
 		}
+	end,
+	init = function()
+		vim.cmd([[cab cc CodeCompanion]])
+		require("plugins.custom.spinner"):init()
 	end,
 }
