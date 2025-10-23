@@ -51,7 +51,6 @@ return {
 				mode = { "n", "v" },
 				desc = "Code Companion Commit",
 			},
-			{ "<leader>ah", ":CodeCompanionLoad<CR>", desc = "Codecompanion Load chat" },
 			{
 				"<leader>ai",
 				":CodeCompanion /agent<cr>",

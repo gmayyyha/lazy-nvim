@@ -85,7 +85,9 @@ return {
 							.. "  - Follows best practices for readability and maintainability.\n"
 							.. "  - Is formatted correctly.\n\n"
 							.. "For C/C++ code: use Doxygen comments using `\\` instead of `@`.\n"
-							.. "For Python code: Use Docstring numpy-notypes format.",
+							.. "For Python code: Use Docstring numpy-notypes format.\n\n"
+							.. "Crucially, your response MUST ONLY contain the fully documented code, replacing the original selection. Do NOT include any conversational text, explanations, or markdown code block delimiters (e.g., ```lua or ```). The output should be the exact text to be inserted, without any leading or trailing blank lines or extra whitespace that is not part of the documented code itself. The documentation and code should be in the same programming language as the input code block.",
+
 						opts = {
 							visible = false,
 						},

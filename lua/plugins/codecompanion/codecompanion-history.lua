@@ -9,9 +9,10 @@ return {
 				enabled = true,
 				opts = {
 					-- Keymap to open history from chat buffer (default: gh)
-					keymap = "ah",
+					keymap = "<leader>ah",
 					-- Automatically generate titles for new chats
 					auto_generate_title = true,
+					delete_on_clearing_chat = false,
 					---On exiting and entering neovim, loads the last chat on opening chat
 					continue_last_chat = false,
 					---When chat is cleared with `gx` delete the chat from history
