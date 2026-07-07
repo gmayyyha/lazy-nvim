@@ -8,12 +8,12 @@ return {
 			light_style = "day",
 			on_colors = function(colors) end,
 			on_highlights = function(hl, colors)
-				hl.CursorLineNr = { fg = "#ff9e64" }
-				hl.LineNr = { fg = "#7aa2f7" }
-				hl.LineNrAbove = { fg = "#7f7f7f" }
-				hl.LineNrBelow = { fg = "#666666" }
-				hl.Visual = { bg = "#296015" }
-				hl.Comment = { fg = "#75985d" }
+				-- hl.CursorLineNr = { fg = "#ff9e64" }
+				-- hl.LineNr = { fg = "#7aa2f7" }
+				-- hl.LineNrAbove = { fg = "#7f7f7f" }
+				-- hl.LineNrBelow = { fg = "#666666" }
+				-- hl.Visual = { bg = "#296015" }
+				-- hl.Comment = { fg = "#75985d" }
 			end,
 		},
 		config = function(_, opts)
@@ -28,15 +28,18 @@ return {
 		lazy = false,
 		priority = 1001,
 		config = function()
+			local function refresh_theme(mode)
+				vim.api.nvim_set_option_value("background", mode, {})
+				vim.cmd("colorscheme tokyonight")
+			end
+
 			require("auto-dark-mode").setup({
 				update_interval = 1000,
 				set_dark_mode = function()
-					vim.api.nvim_set_option_value("background", "dark", {})
-					vim.cmd("colorscheme tokyonight")
+					refresh_theme("dark")
 				end,
 				set_light_mode = function()
-					vim.api.nvim_set_option_value("background", "light", {})
-					vim.cmd("colorscheme tokyonight")
+					refresh_theme("light")
 				end,
 			})
 		end,
