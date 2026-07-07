@@ -100,7 +100,7 @@ return {
 				show_defaults = true,
 				log_level = "DEBUG",
 			},
-			strategies = {
+			interactions = {
 				chat = {
 					opts = {
 						goto_file_action = "edit",

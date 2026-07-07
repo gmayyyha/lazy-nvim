@@ -1,6 +1,7 @@
 return {
 	"nvim-treesitter/nvim-treesitter",
 	event = { "BufReadPre", "BufNewFile" },
+  lazy = false,
 	build = ":TSUpdate",
 
 	dependencies = {
@@ -10,7 +11,7 @@ return {
 
 	config = function()
 		-- import nvim-treesitter plugin
-		local treesitter = require("nvim-treesitter.configs")
+		local treesitter = require("nvim-treesitter")
 
 		---@diagnostic disable-next-line: missing-fields
 		treesitter.setup({

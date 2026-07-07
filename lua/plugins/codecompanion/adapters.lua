@@ -28,7 +28,7 @@ local gemini_fn = function()
 		},
 		schema = {
 			model = {
-				default = "gemini-2.5-flash",
+				default = "gemini-3.1-flash-lite",
 			},
 		},
 	}
